@@ -3,30 +3,31 @@ import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 function Movie() {
-const[movie, setMovie] = useState({});
-const params = useParams();
-const movieId = params.id;
+  const params = useParams()
+  const movieId = params.id 
+  const [movie,setMovie] = useState({})
+  useEffect(()=>{
+    fetch(`http://localhost:3000/movies/${movieId}`)
+    .then(res=>res.json())
+    .then(data=>setMovie(data))
 
-useEffect(() =>{
-  fetch(`http://localhost:4000/movies/${movieId}`)
-  .then(r => r.json())
-  .then(data => setMovie(data))
-  .catch(error => console.error(error));
-}, [movieId]);
+  },[movieId])
 
-if(!movie.title){
-  return <h1>Loading...</h1>;
-};
 
+  if(!movie.title){
+    return <p>Loading...</p>
+  }
   return (
     <>
       <header>
-        <NavBar />
+        <NavBar/>
       </header>
       <main>
-       <h1>Title: {movie.title}</h1>
-       <p>Time: {movie.time} minutes</p>
-       <span>Genre: {movie.genres}</span>
+        <h1>{movie.title}</h1>
+        <p>{movie.time}</p>
+        {movie.genres.map((item,index)=>{
+          return <span key={index}>{item}</span>
+        })}
       </main>
     </>
   );
